@@ -1,4 +1,4 @@
-Explicación de mi practica de Machine Learning - Airbnb - MATIAS CAVALLO
+## Explicación de mi practica de Machine Learning - Airbnb - MATIAS CAVALLO
 
 Básicamente hay que predecir el precio de alojamientos de Airbnb. Como el precio es un número, es un problema de regresión.  Por lo tanto, me base en en el ejemplo de las casas de King County, que fue el que más me sirvió como guía.
 
@@ -25,8 +25,16 @@ Para terminar, usé Random Forest, que imaginaba que iba a ser el mejorcito, por
 
 Evalué todos los modelos usando MSE, RMSE y R2. El MSE (Mean Squared Error) es el error cuadrático medio, o sea el promedio de las diferencias al cuadrado entre los valores reales y los predichos. El RMSE es la raíz del MSE, y me gusta más porque está en las mismas unidades que el precio (dólares). Si me da 50, significa que en promedio me equivoco unos 50 dólares; cuanto más bajo, mejor. El R2 es un número entre 0 y 1: cuanto más se acerca a 1, mejor predice el modelo. A partir de 0.7 ya se considera bastante bueno, y si llega a 0.8 o más, excelente.
 
-CONCLUSION.
+## CONCLUSION.
 
 Como conclusion puedo decir  que Random Forest fue el mejor modelo por lejos, ya que tuvo el RMSE más bajo y el R2 más alto en el conjunto de test. En promedio, usando esto las predicciones se equivocan en unos 30 dólares, y el precio se explicaria en un 64% por las variables importantes y objetivas que contamos y que aparte tienen logica (ubicaciones, habitaciones, baños). El 36% restante probablemente se debe a factores que no están en el dataset, como la calidad de las fotos o la temporada del año como cosas que se me ocurren. La ubicación sí es un factor relevante, aunque el tamaño físico/dependencias del alojamiento tiene mayor peso en la predicción del precio. Aparte esta experiencia me demostro que limpiar bien los datos es muy importante, más de lo que pensaba. Y entiendo que Random Forest funciona mejor porque porque puede combinar muchos árboles para tomar mejores decisiones. 
 
 Desde ya muchas gracias por todo. Saludos.
+
+## Nota importante sobre Data Leakage
+
+En la versión inicial de este trabajo, cometí un error conceptual grave: hice la división train/test al final del preprocesamiento, lo que provocó data leakage. Tras la corrección del profesor, reestructuré completamente el notebook siguiendo las pautas del notebook 3.1 de ayuda para la práctica:
+Hice el split inmediatamente después de seleccionar las columnas relevantes, ANTES de cualquier preprocesamiento. Todo el análisis exploratorio, cálculo de estadísticas, detección de outliers y entrenamiento de encoders los hice únicamente con el conjunto de entrenamiento.
+Guardé todos los valores calculados en train para aplicarlos después al conjunto de test.
+Solo cargue y preprocese el conjunto de test justo antes del modelado, aplicándole las transformaciones aprendidas del train.
+Esta corrección asegura que el modelo nunca "ve" información del test durante el entrenamiento, lo que hace que las métricas de evaluación sean confiables y reflejen el verdadero desempeño del modelo en datos nuevos.
